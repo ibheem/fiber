@@ -1,8 +1,6 @@
 $(function () {
     let selector = {
         container_id: 'anim_container',
-        anim_count: 0,
-        anim_length: 4,
         video_audio: [{
                 selector: '[data-_video=first]',
                 action: 'play/pause',
@@ -81,22 +79,14 @@ $(function () {
         this._selector = _selector.container_id;
         this._duration = 0;
         this._video_length = 0;
-        this._counter = _selector.anim_count;
-        this._length = _selector.anim_length;
+        this._length = _selector.input_arr.length;
         this._input_arr = _selector.input_arr;
         this._video_audio = _selector.video_audio;
         this._run_length = {
             _duration: 0,
             _video_length: 0
         };
-        this._run_length._duration = () => {
-            // for (let i = 0; i < this._input_arr.length; i++) {
-            for (let k = 0; k < this._input_arr[this._counter].length; k++) {
-                this._duration += this._input_arr[this._counter][k].delay;
-            }
-            // }
-            return this._duration;
-        };
+
         this._run_length._video_length = () => {
             for (let i = 0; i < this._video_audio.length; i++) {
                 this._video_length += this._video_audio[i].length;
@@ -104,41 +94,139 @@ $(function () {
             return this._video_length;
         };
     }
+    _process_input.prototype.calcDelay = (z, i) => {
+        for (let k = 0; k < z._input_arr[i].length; k++) {
+            z._duration += z._input_arr[i][k].delay;
+        }
+    };
 
-    //scroll binder element
+    //scroll binder element (declaration)
     let box;
-
-
-    //initiator
+    let repeater = 0;
+    let lastScrollTop = 0;
+    //initiator block
     (function () {
         var scene = new _process_input(selector);
         box = document.querySelector('#' + scene._selector);
-        // $('body').css('overflow','hidden');
-        $(document).on('scroll', function (e) {
-            if ($(document).scrollTop() < $('#' + scene._selector).height()) {
-                console.log('yes');
-            } else {
-                console.log('no');
+
+        //scroll vendor block
+        $(document).on('mousewheel DOMMouseScroll', playScroll);
+
+        function playScroll(e) {
+            if (typeof e.originalEvent.detail == 'number' && e.originalEvent.detail !== 0) {
+                if (e.originalEvent.detail > 0) {
+                    console.log('Down');
+
+                    // block
+                    if ($(document).scrollTop() < $('#' + scene._selector).height()) {
+                        $(document).scrollTop(0);
+                        scene._duration = 0;
+                        if (repeater < scene._length) {
+                            scene.calcDelay(scene, repeater);
+                            repeater++;
+                           // console.log('ohh! yo!' + repeater + " laLiga " + scene._length);
+                        }
+                        //disableScroll();
+                        $(document).off('scroll');
+                        // $('#' + scene._selector).off('scroll');
+                        setTimeout(function () {
+                            //$(document).on('scroll', playScroll);
+                            $(document).on('scroll');
+                            $(document).on('scroll', playScroll);
+                            // $('#' + scene._selector).on('scroll');
+                            //enableScroll();
+                            //console.log('enabled');
+                        }, scene._duration);
+                    } else {
+                        console.log('no');
+                    }
+                    //./block
+                } else if (e.originalEvent.detail < 0) {
+                    console.log('Up');
+                    // block
+                    if ($(document).scrollTop() < $('#' + scene._selector).height()) {
+                        $(document).scrollTop(0);
+                        scene._duration = 0;
+                        if (repeater < scene._length && repeater > 0) {
+                            repeater--;
+                            scene.calcDelay(scene, repeater);
+                            console.log('ohh! no!' + repeater + " aaLiga " + scene._length);
+                        }
+                        //disableScroll();
+                        $(document).off('scroll');
+                        // $('#' + scene._selector).off('scroll');
+                        setTimeout(function () {
+                            //$(document).on('scroll', playScroll);
+                            $(document).on('scroll');
+                            $(document).on('scroll', playScroll);
+                            // $('#' + scene._selector).on('scroll');
+                            //enableScroll();
+                            //console.log('enabled');
+                        }, scene._duration);
+                    } else {
+                        console.log('no');
+                    }
+                    //./block
+                }
+            } else if (typeof e.originalEvent.wheelDelta == 'number') {
+                if (e.originalEvent.wheelDelta < 0) {
+                    //console.log('Down');
+                    // block
+                    if ($(document).scrollTop() < $('#' + scene._selector).height()) {
+                        $(document).scrollTop(0);
+                        scene._duration = 0;
+                        if (repeater < scene._length) {
+                            scene.calcDelay(scene, repeater);
+                            repeater++;
+                            //console.log('ohh! yo!' + repeater + " laLiga " + scene._length);
+                        }
+                        //disableScroll();
+                        $(document).off('scroll');
+                        // $('#' + scene._selector).off('scroll');
+                        setTimeout(function () {
+                            //$(document).on('scroll', playScroll);
+                            $(document).on('scroll');
+                            $(document).on('scroll', playScroll);
+                            // $('#' + scene._selector).on('scroll');
+                            //enableScroll();
+                            //console.log('enabled');
+                        }, scene._duration);
+                    } else {
+                        console.log('no');
+                    }
+                    //./block
+                } else if (e.originalEvent.wheelDelta > 0) {
+                    //console.log('Up');
+                    // block
+                    if ($(document).scrollTop() < $('#' + scene._selector).height()) {
+                        $(document).scrollTop(0);
+                        scene._duration = 0;
+                        if (repeater < scene._length && repeater > 0) {
+                            repeater--;
+                            scene.calcDelay(scene, repeater);
+                            //console.log('ohh! no!' + repeater + " aaLiga " + scene._length);
+                        }
+                        //disableScroll();
+                        $(document).off('scroll');
+                        // $('#' + scene._selector).off('scroll');
+                        setTimeout(function () {
+                            //$(document).on('scroll', playScroll);
+                            $(document).on('scroll');
+                            $(document).on('scroll', playScroll);
+                            // $('#' + scene._selector).on('scroll');
+                            //enableScroll();
+                            //console.log('enabled');
+                        }, scene._duration);
+                    } else {
+                        console.log('no');
+                    }
+                    //./block
+                }
             }
 
-            // for (let i = 0; i < scene._length; i++) {
-            for (let i = 0; i < 1; i++) {
-                console.log(scene._run_length._duration());
-                setTimeout(function () {
-                    $('body').css('overflow','auto');
-                    disableScroll();
-                    console.log('disabled');
-                    // enableScroll();
-                }, scene._run_length._duration());
-                scene._counter++;
-                //console.log(scene._counter);
-            }
-            scene._counter = 0;
-            //console.log(scene._counter);
-        });
-
-
+        }
     })()
+
 
 
     // for enabling and disabling the scroll
