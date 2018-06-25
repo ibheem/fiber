@@ -8,29 +8,24 @@ $(function () {
         container_id: 'anim_container',
         max_repeats: 4,
         video_audio: [{
-                selector: '[data-_video=first]',
+                selector: '[data-_video=1]',
                 action: 'play/pause',
                 length: 2000
             },
             {
-                selector: '[data-_video=second]',
+                selector: '[data-_video=2]',
                 action: 'play/pause',
                 length: 2000
             },
             {
-                selector: '[data-_video=third]',
-                action: 'play/pause',
-                length: 2000
-            },
-            {
-                selector: '[data-_video=third]',
+                selector: '[data-_video=3]',
                 action: 'play/pause',
                 length: 2000
             }
         ],
         input_arr: [
             [{
-                    selector: '[data-_fiber=first]',
+                    selector: 'data-_fiber=',
                     action: [{
                         act: 'remove',
                         class: 'hidden',
@@ -38,10 +33,11 @@ $(function () {
                         act: 'add',
                         class: 'animated fadeInDown',
                     }],
-                    delay: 200
+                    delay: 200,
+                    parent:'slide_1'
                 },
                 {
-                    selector: '[data-_fiber=second]',
+                    selector: 'data-_fiber=',
                     action: [{
                         act: 'remove',
                         class: 'hidden',
@@ -49,33 +45,62 @@ $(function () {
                         act: 'add',
                         class: 'animated fadeInDown',
                     }],
-                    delay: 200
+                    delay: 200,
+                    parent:'slide_1'
                 }
             ],
             [{
-                    selector: '[data-_fiber=third]',
-                    action: 'add/remove/toggle',
+                    selector: 'data-_fiber=',
+                    action: [{
+                        act: 'remove',
+                        class: 'hidden',
+                    }, {
+                        act: 'add',
+                        class: 'animated fadeInDown',
+                    }],
                     class: '',
-                    delay: 200
+                    delay: 200,
+                    parent:'slide_2'
                 },
                 {
-                    selector: '[data-_fiber=fourth]',
-                    action: 'add/remove/toggle',
+                    selector: 'data-_fiber=',
+                    action: [{
+                        act: 'remove',
+                        class: 'hidden',
+                    }, {
+                        act: 'add',
+                        class: 'animated fadeInDown',
+                    }],
                     class: '',
-                    delay: 200
+                    delay: 200,
+                    parent:'slide_2'
                 }
             ],
             [{
-                    selector: '[data-_fiber=fifth]',
-                    action: 'add/remove/toggle',
+                    selector: 'data-_fiber=',
+                    action: [{
+                        act: 'remove',
+                        class: 'hidden',
+                    }, {
+                        act: 'add',
+                        class: 'animated fadeInDown',
+                    }],
                     class: '',
-                    delay: 200
+                    delay: 200,
+                    parent:'slide_3'
                 },
                 {
-                    selector: '[data-_fiber=sixth]',
-                    action: 'add/remove/toggle',
+                    selector: 'data-_fiber=',
+                    action: [{
+                        act: 'remove',
+                        class: 'hidden',
+                    }, {
+                        act: 'add',
+                        class: 'animated fadeInDown',
+                    }],
                     class: '',
-                    delay: 200
+                    delay: 200,
+                    parent:'slide_3'
                 }
             ]
         ],
@@ -157,7 +182,39 @@ $(function () {
     };
     _process_input.prototype.runAnimator = (z, i) => {
         for (let k = 0; k < z._input_arr[i].length; k++) {
-           console.log(z._input_arr[i][k]);
+            console.log(z._input_arr[i][k]);
+            for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
+                $('#slide_'+(j+1)).addClass('hidden');
+                // switch (z._input_arr[i][k].action[j].act) {
+                //     case 'remove':
+                //     $(z._input_arr[i][k].selector).addClass(''+z._input_arr[i][k].action[j].class);
+                //         break;
+                //     case 'add':
+                //     $(z._input_arr[i][k].selector).removeClass(''+z._input_arr[i][k].action[j].class);
+                //         break;
+                //     case 'toggle':
+                //     $(z._input_arr[i][k].selector).toggleClass(''+z._input_arr[i][k].action[j].class);
+                //         break;
+                // }
+            }
+            $('#slide_'+i).removeClass('hidden');
+            for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
+                setTimeout(function () {
+                    switch (z._input_arr[i][k].action[j].act) {
+                        case 'remove':
+                        $('['+z._input_arr[i][k].selector+i+']').removeClass(''+z._input_arr[i][k].action[j].class);
+                            break;
+                        case 'add':
+                        $('['+z._input_arr[i][k].selector+i+']').addClass(''+z._input_arr[i][k].action[j].class);
+                            break;
+                        case 'toggle':
+                        $('['+z._input_arr[i][k].selector+i+']').toggleClass(''+z._input_arr[i][k].action[j].class);
+                            break;
+                    }
+                    
+                }, z._input_arr[i][k].delay);
+            }
+
         }
     };
 
@@ -185,11 +242,11 @@ $(function () {
                         if (repeater < scene._length) {
                             console.log('are baba');
                             scene.calcDelay(scene, repeater);
-                            //$(document).off('scroll');
+                            $(document).scrollTop(0);
                             $(document).off('mousewheel DOMMouseScroll');
                             scene.runAnimator(scene, repeater);
                             setTimeout(function () {
-                               // $(document).on('scroll');
+                                // $(document).on('scroll');
                                 $(document).on('mousewheel DOMMouseScroll');
                                 $(document).on('mousewheel DOMMouseScroll', playScroll);
                                 if (repeater == scene._max_repeats)
@@ -300,23 +357,3 @@ $(function () {
 
 
 });
-
-
-
-
-// $('.well').on('mousewheel DOMMouseScroll', function (e) {
-//     if (this.scrollTop < 100) {
-//         var e0 = e.originalEvent;
-//         var delta = e0.wheelDelta || -e0.detail;
-//         this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-//         console.log(this.scrollTop);
-//         _process_input(selector);
-//         e.preventDefault();
-//     } else {
-//         console.log(this.scrollTop);
-//     }
-// });
-
-
-
-//object.addEventListener("scroll", myScript);
