@@ -1,5 +1,5 @@
 $(function () {
-
+    $(document).scrollTop(0);
     // $("body").niceScroll({
     //     cursorcolor: "aquamarine",
     //     cursorwidth: "16px"
@@ -59,7 +59,7 @@ $(function () {
                     class: 'animated fadeInDown',
                 }],
                 class: '',
-                delay: 200,
+                delay: 500,
                 parent: 'slide_2'
             },
             {
@@ -72,7 +72,7 @@ $(function () {
                     class: 'animated fadeInDown',
                 }],
                 class: '',
-                delay: 200,
+                delay: 500,
                 parent: 'slide_2'
             }
             ],
@@ -86,7 +86,7 @@ $(function () {
                     class: 'animated fadeInDown',
                 }],
                 class: '',
-                delay: 200,
+                delay: 500,
                 parent: 'slide_3'
             },
             {
@@ -99,7 +99,7 @@ $(function () {
                     class: 'animated fadeInDown',
                 }],
                 class: '',
-                delay: 200,
+                delay: 500,
                 parent: 'slide_3'
             }
             ]
@@ -175,7 +175,7 @@ $(function () {
         disableScroll();
     };
     _process_input.prototype.pauseVideo = (z, i) => {
-        let myVideo = document.getElementById("video1");
+        let myVideo = document.getElementById("video"+i);
         if (!myVideo.paused)
             myVideo.pause();
     };
@@ -258,12 +258,12 @@ $(function () {
                 $(window).mousewheel(function (turn, delta) {
                     if (delta == 1) {
                         console.log('up');
+                        repeater = 0;
+                        scene.runAnimator(scene, repeater);
                     }
                     else {
                         console.log('down');
-                        setTimeout(() => {
-                        $(window).unbind('mousewheel');
-                        },1000);
+
                     }
                     return false;
                 });
