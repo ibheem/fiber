@@ -8,100 +8,100 @@ $(function () {
         container_id: 'anim_container',
         max_repeats: 4,
         video_audio: [{
-                selector: '[data-_video=1]',
-                action: 'play/pause',
-                length: 2000
-            },
-            {
-                selector: '[data-_video=2]',
-                action: 'play/pause',
-                length: 2000
-            },
-            {
-                selector: '[data-_video=3]',
-                action: 'play/pause',
-                length: 2000
-            }
+            selector: '[data-_video=1]',
+            action: 'play/pause',
+            length: 2000
+        },
+        {
+            selector: '[data-_video=2]',
+            action: 'play/pause',
+            length: 2000
+        },
+        {
+            selector: '[data-_video=3]',
+            action: 'play/pause',
+            length: 2000
+        }
         ],
         input_arr: [
             [{
-                    selector: 'data-_fiber=',
-                    action: [{
-                        act: 'remove',
-                        class: 'hidden',
-                    }, {
-                        act: 'add',
-                        class: 'animated fadeInDown',
-                    }],
-                    delay: 200,
-                    parent:'slide_1'
-                },
-                {
-                    selector: 'data-_fiber=',
-                    action: [{
-                        act: 'remove',
-                        class: 'hidden',
-                    }, {
-                        act: 'add',
-                        class: 'animated fadeInDown',
-                    }],
-                    delay: 200,
-                    parent:'slide_1'
-                }
+                selector: 'data-_fiber=',
+                action: [{
+                    act: 'remove',
+                    class: 'hidden',
+                }, {
+                    act: 'add',
+                    class: 'animated fadeInDown',
+                }],
+                delay: 200,
+                parent: 'slide_1'
+            },
+            {
+                selector: 'data-_fiber=',
+                action: [{
+                    act: 'remove',
+                    class: 'hidden',
+                }, {
+                    act: 'add',
+                    class: 'animated fadeInDown',
+                }],
+                delay: 200,
+                parent: 'slide_1'
+            }
             ],
             [{
-                    selector: 'data-_fiber=',
-                    action: [{
-                        act: 'remove',
-                        class: 'hidden',
-                    }, {
-                        act: 'add',
-                        class: 'animated fadeInDown',
-                    }],
-                    class: '',
-                    delay: 200,
-                    parent:'slide_2'
-                },
-                {
-                    selector: 'data-_fiber=',
-                    action: [{
-                        act: 'remove',
-                        class: 'hidden',
-                    }, {
-                        act: 'add',
-                        class: 'animated fadeInDown',
-                    }],
-                    class: '',
-                    delay: 200,
-                    parent:'slide_2'
-                }
+                selector: 'data-_fiber=',
+                action: [{
+                    act: 'remove',
+                    class: 'hidden',
+                }, {
+                    act: 'add',
+                    class: 'animated fadeInDown',
+                }],
+                class: '',
+                delay: 200,
+                parent: 'slide_2'
+            },
+            {
+                selector: 'data-_fiber=',
+                action: [{
+                    act: 'remove',
+                    class: 'hidden',
+                }, {
+                    act: 'add',
+                    class: 'animated fadeInDown',
+                }],
+                class: '',
+                delay: 200,
+                parent: 'slide_2'
+            }
             ],
             [{
-                    selector: 'data-_fiber=',
-                    action: [{
-                        act: 'remove',
-                        class: 'hidden',
-                    }, {
-                        act: 'add',
-                        class: 'animated fadeInDown',
-                    }],
-                    class: '',
-                    delay: 200,
-                    parent:'slide_3'
-                },
-                {
-                    selector: 'data-_fiber=',
-                    action: [{
-                        act: 'remove',
-                        class: 'hidden',
-                    }, {
-                        act: 'add',
-                        class: 'animated fadeInDown',
-                    }],
-                    class: '',
-                    delay: 200,
-                    parent:'slide_3'
-                }
+                selector: 'data-_fiber=',
+                action: [{
+                    act: 'remove',
+                    class: 'hidden',
+                }, {
+                    act: 'add',
+                    class: 'animated fadeInDown',
+                }],
+                class: '',
+                delay: 200,
+                parent: 'slide_3'
+            },
+            {
+                selector: 'data-_fiber=',
+                action: [{
+                    act: 'remove',
+                    class: 'hidden',
+                }, {
+                    act: 'add',
+                    class: 'animated fadeInDown',
+                }],
+                class: '',
+                delay: 200,
+                parent: 'slide_3'
+            }
             ]
         ],
     }
@@ -184,7 +184,7 @@ $(function () {
         for (let k = 0; k < z._input_arr[i].length; k++) {
             console.log(z._input_arr[i][k]);
             for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
-                $('#slide_'+(j+1)).addClass('hidden');
+                $('#slide_' + (j + 1)).addClass('hidden');
                 // switch (z._input_arr[i][k].action[j].act) {
                 //     case 'remove':
                 //     $(z._input_arr[i][k].selector).addClass(''+z._input_arr[i][k].action[j].class);
@@ -197,21 +197,21 @@ $(function () {
                 //         break;
                 // }
             }
-            $('#slide_'+i).removeClass('hidden');
+            $('#slide_' + i).removeClass('hidden');
             for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
                 setTimeout(function () {
                     switch (z._input_arr[i][k].action[j].act) {
                         case 'remove':
-                        $('['+z._input_arr[i][k].selector+i+']').removeClass(''+z._input_arr[i][k].action[j].class);
+                            $('[' + z._input_arr[i][k].selector + i + ']').removeClass('' + z._input_arr[i][k].action[j].class);
                             break;
                         case 'add':
-                        $('['+z._input_arr[i][k].selector+i+']').addClass(''+z._input_arr[i][k].action[j].class);
+                            $('[' + z._input_arr[i][k].selector + i + ']').addClass('' + z._input_arr[i][k].action[j].class);
                             break;
                         case 'toggle':
-                        $('['+z._input_arr[i][k].selector+i+']').toggleClass(''+z._input_arr[i][k].action[j].class);
+                            $('[' + z._input_arr[i][k].selector + i + ']').toggleClass('' + z._input_arr[i][k].action[j].class);
                             break;
                     }
-                    
+
                 }, z._input_arr[i][k].delay);
             }
 
@@ -292,28 +292,30 @@ $(function () {
                 }
             } else if (typeof e.originalEvent.wheelDelta == 'number') {
                 if (e.originalEvent.wheelDelta < 0) {
-                    //console.log('Down');
+                    console.log('Down');
+
                     // block
                     if ($(document).scrollTop() < $('#' + scene._selector).height()) {
                         $(document).scrollTop(0);
                         scene._duration = 0;
                         if (repeater < scene._length) {
-                            console.log('aaa');
+                            console.log('are baba');
                             scene.calcDelay(scene, repeater);
-                            repeater++;
-                            //console.log('ohh! yo!' + repeater + " laLiga " + scene._length);
+                            $(document).scrollTop(0);
+                            $(document).off('mousewheel DOMMouseScroll');
+                            scene.runAnimator(scene, repeater);
+                            setTimeout(function () {
+                                // $(document).on('scroll');
+                                $(document).on('mousewheel DOMMouseScroll');
+                                $(document).on('mousewheel DOMMouseScroll', playScroll);
+                                if (repeater == scene._max_repeats)
+                                    enableScroll();
+                                repeater++;
+                                console.log('ohh! yo!' + repeater + " laLiga " + scene._length);
+                            }, scene._duration);
+
                         }
                         //disableScroll();
-                        $(document).off('scroll');
-                        // $('#' + scene._selector).off('scroll');
-                        setTimeout(function () {
-                            //$(document).on('scroll', playScroll);
-                            $(document).on('scroll');
-                            $(document).on('scroll', playScroll);
-                            // $('#' + scene._selector).on('scroll');
-                            //enableScroll();
-                            //console.log('enabled');
-                        }, scene._duration);
                     } else {
                         console.log('no');
                     }

@@ -1,0 +1,6 @@
+.fixed_height{
+    height:50rem;
+    border:1px solid coral;
+    border-radius: 0px;
+    overflow:scroll;
+}
