@@ -102,6 +102,33 @@ $(function () {
                 delay: 500,
                 parent: 'slide_3'
             }
+            ],
+            [{
+                selector: 'data-_fiber=',
+                action: [{
+                    act: 'remove',
+                    class: 'hidden',
+                }, {
+                    act: 'add',
+                    class: 'animated fadeInDown',
+                }],
+                class: '',
+                delay: 500,
+                parent: 'slide_4'
+            },
+            {
+                selector: 'data-_fiber=',
+                action: [{
+                    act: 'remove',
+                    class: 'hidden',
+                }, {
+                    act: 'add',
+                    class: 'animated fadeInDown',
+                }],
+                class: '',
+                delay: 500,
+                parent: 'slide_4'
+            }
             ]
         ],
     }
@@ -157,7 +184,7 @@ $(function () {
         this._next = {};
         this._repeater = 0;
         this._duration = 0;
-        this._max_repeats = _selector._max_repeats;
+        this._max_repeats = _selector.max_repeats;
         this._video_length = 0;
         this._length = _selector.input_arr.length;
         this._input_arr = _selector.input_arr;
@@ -205,11 +232,8 @@ $(function () {
         //alert(z._duration);
     };
     _process_input.prototype.animatorDown = (z, i) => {
-        if (z._max_repeats > i && z._max_repeats != i) {
-            z._repeater = i++;
-        } else {
-            //scene.repeater = i++;
-        }
+        //z._repeater = i++;
+
         for (let k = 0; k < z._input_arr[i].length; k++) {
             console.log(z._input_arr[i][k]);
             for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
@@ -256,17 +280,13 @@ $(function () {
         disableScroll();
         scene.calcDelay(scene, 0);
         const getInit = new Promise((resolve, reject) => {
-            scene.animatorDown(scene, 0);
+            scene.animatorDown(scene, scene._repeater);
             setTimeout(() => {
-                resolve(scene.playVideo(scene, 0));
+                resolve(scene.playVideo(scene, scene._repeater));
             }, scene._duration);
         });
-        let repeater = 0;
-        const animateDown = new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(scene.animatorDown(scene, repeater));
-            }, scene._duration);
-        });
+        // let repeater = 0;
+
         // const animateUp = repeater => {
         //     return new Promise((resolve, reject) => {
 
@@ -279,36 +299,66 @@ $(function () {
         //         }, scene._duration);
         //     });
         // };
-        
-
-        function scrollT() {
-            $(window).mousewheel(function (turn, delta) {
-                if (delta == 1) {
-                    console.log('up');
 
 
+        function scrollT(t) {
+            $(document).on('mousewheel DOMMouseScroll', (e) => {
+                if (scene._repeater < scene._max_repeats) {
+                    $(window).mousewheel(function (turn, delta) {
+                        if (delta == 1) {
+                            console.log('up');
+                            const animateUp = new Promise((resolve, reject) => {
+
+                                // if (scene.repeater < scene._max_repeats) {
+                                scene._repeater = t;
+                                scene.animatorUp(scene, scene._repeater);
+                                //}
+                                setTimeout(() => {
+                                    resolve(scene.playVideo(scene, scene._repeater));
+                                }, scene._duration);
+                            });
+
+                        }
+                        else {
+                            console.log('down');
+                            const animateDown = new Promise((resolve, reject) => {
+
+                                // if (scene.repeater < scene._max_repeats) {
+                                scene._repeater = t;
+                                scene.animatorDown(scene, scene._repeater);
+                                //}
+                                setTimeout(() => {
+                                    resolve(scene.playVideo(scene, scene._repeater));
+                                }, scene._duration);
+                            });
+                            animateDown
+                                .then(() => {
+                                    console.log(scene._repeater + " " + scene._duration);
+                                    scrollT(2);
+                                    //return getRecipe(IDs[2]);
+                                })
+                                .then(() => {
+                                    console.log(scene._repeater + " " + scene._duration);
+                                    scrollT(3);
+                                    //return getRecipe(IDs[2]);
+                                })
+                        }
+                        return false;
+                    });
+                } else {
+                    return false;
                 }
-                else {
-
-                    console.log('down');
-                    animateDown
-                        .then(() => {
-                            console.log(scene._repeater);
-                            //return getRecipe(IDs[2]);
-                        })
-
-                }
-                return false;
             });
         }
         getInit
             .then(flag => {
                 console.log(flag);
-                enableScroll();
+                //enableScroll();
                 setTimeout(function () {
-                    scrollT();
+                    scrollT(1);
                 }, scene._duration);
             })
+
         //scroll vendor block
         // $(document).on('mousewheel DOMMouseScroll', (e) => {
         //     $(document).scrollTop(0);
@@ -318,10 +368,4 @@ $(function () {
 
         // }
     })()
-
-
-
-    // for enabling and disabling the scroll
-
-
 });
