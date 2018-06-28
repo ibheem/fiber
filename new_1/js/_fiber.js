@@ -1,7 +1,15 @@
 $(function () {
     let _fiber = {};
-    _fiber.author = "Phoenix";
-    console.log(_fiber.author);
+    
+    // first promise getInit
+    // scroll flag up 2nd promise animatorUp
+    // scroll flag down 3rd promise animatorDown
+    // animatorDown :: if animator completes the last run remove the scroll stop event
+    // scroll bind and unbind function
+    // if animatorUp :: if animator completes the last run no action; no more animatorUp will be 
+    // called on scroll up event.
+    // animatorUp will be called (if repeater value is greater than min value)
+    // animatorDown will be called (if repeater value is less than max value and greater than min value)
     
     
 

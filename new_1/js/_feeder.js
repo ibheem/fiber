@@ -108,7 +108,7 @@ $(function () {
 
     //scroll binder element (declaration)
     let box;
-    let repeater = 0;
+
     let lastScrollTop = 0;
     var keys = {
         37: 1,
@@ -155,6 +155,7 @@ $(function () {
         this._previous = {};
         this._current = {};
         this._next = {};
+        this._repeater = 0;
         this._duration = 0;
         this._max_repeats = _selector._max_repeats;
         this._video_length = 0;
@@ -175,9 +176,12 @@ $(function () {
         disableScroll();
     };
     _process_input.prototype.pauseVideo = (z, i) => {
-        let myVideo = document.getElementById("video"+i);
-        if (!myVideo.paused)
-            myVideo.pause();
+        for (let i = 0; i < repeater; i++) {
+            let myVideo = document.getElementById("video" + i(i + 1));
+            if (!myVideo.paused)
+                myVideo.pause();
+        }
+        return true;
     };
     _process_input.prototype.playVideo = (z, i) => {
         let myVideo = document.getElementById("video" + (i + 1));
@@ -200,7 +204,12 @@ $(function () {
         }
         //alert(z._duration);
     };
-    _process_input.prototype.runAnimator = (z, i) => {
+    _process_input.prototype.animatorDown = (z, i) => {
+        if (z._max_repeats > i && z._max_repeats != i) {
+            z._repeater = i++;
+        } else {
+            //scene.repeater = i++;
+        }
         for (let k = 0; k < z._input_arr[i].length; k++) {
             console.log(z._input_arr[i][k]);
             for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
@@ -236,41 +245,69 @@ $(function () {
             }
 
         }
+
     };
 
 
     //initiator block
     (function () {
-        var scene = new _process_input(selector);
+        let scene = new _process_input(selector);
         box = document.querySelector('#' + scene._selector);
         disableScroll();
         scene.calcDelay(scene, 0);
         const getInit = new Promise((resolve, reject) => {
-            scene.runAnimator(scene, 0);
+            scene.animatorDown(scene, 0);
             setTimeout(() => {
                 resolve(scene.playVideo(scene, 0));
             }, scene._duration);
         });
+        let repeater = 0;
+        const animateDown = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(scene.animatorDown(scene, repeater));
+            }, scene._duration);
+        });
+        // const animateUp = repeater => {
+        //     return new Promise((resolve, reject) => {
+
+        //         setTimeout(ID => {
+        //             const recipe = {
+        //                 title: 'Fresh tomato pasta',
+        //                 publisher: 'Jonas'
+        //             };
+        //             resolve(`${ID}: ${recipe.title}`);
+        //         }, scene._duration);
+        //     });
+        // };
+        
+
+        function scrollT() {
+            $(window).mousewheel(function (turn, delta) {
+                if (delta == 1) {
+                    console.log('up');
+
+
+                }
+                else {
+
+                    console.log('down');
+                    animateDown
+                        .then(() => {
+                            console.log(scene._repeater);
+                            //return getRecipe(IDs[2]);
+                        })
+
+                }
+                return false;
+            });
+        }
         getInit
             .then(flag => {
                 console.log(flag);
                 enableScroll();
-                $(window).mousewheel(function (turn, delta) {
-                    if (delta == 1) {
-                        console.log('up');
-                        repeater = 0;
-                        scene.runAnimator(scene, repeater);
-                    }
-                    else {
-                        console.log('down');
-
-                    }
-                    return false;
-                });
-                // $(document).on('mousewheel DOMMouseScroll', (e) => {
-                //     $(document).scrollTop(0);
-                //     disableScroll();
-                // });
+                setTimeout(function () {
+                    scrollT();
+                }, scene._duration);
             })
         //scroll vendor block
         // $(document).on('mousewheel DOMMouseScroll', (e) => {
