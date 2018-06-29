@@ -350,13 +350,62 @@ $(function () {
                 }
             });
         }
+        $(document).on('mousewheel DOMMouseScroll', (e) => {
+            if (scene._repeater < scene._max_repeats) {
+                $(window).mousewheel(function (turn, delta) {
+                    if (delta == 1) {
+                        console.log('up');
+                    } else {
+                        console.log('down');
+                        const animateDown_1 = new Promise((resolve, reject) => {
+                            // if (scene.repeater < scene._max_repeats) {
+                            scene._repeater = 1;
+                            scene.animatorDown(scene, scene._repeater);
+                            //}
+                            setTimeout(() => {
+                                resolve(scene.playVideo(scene, scene._repeater));
+                            }, scene._duration);
+                        });
+                        const animateDown_2 = new Promise((resolve, reject) => {
+                            // if (scene.repeater < scene._max_repeats) {
+                            scene._repeater = 2;
+                            scene.animatorDown(scene, scene._repeater);
+                            //}
+                            setTimeout(() => {
+                                resolve(scene.playVideo(scene, scene._repeater));
+                            }, scene._duration);
+                        });
+                        const animateDown_3 = new Promise((resolve, reject) => {
+                            // if (scene.repeater < scene._max_repeats) {
+                            scene._repeater = 2;
+                            scene.animatorDown(scene, scene._repeater);
+                            //}
+                            setTimeout(() => {
+                                resolve(scene.playVideo(scene, scene._repeater));
+                            }, scene._duration);
+                        });
+                        animateDown_1
+                            .then(() => {
+                                console.log(scene._repeater + " " + scene._duration);
+                                return animateDown_2
+                                //return getRecipe(IDs[2]);
+                            })
+                            .then(() => {
+                                console.log(scene._repeater + " " + scene._duration);
+                                return animateDown_3
+                                //return getRecipe(IDs[2]);
+                            })
+                    }
+                });
+            }
+        });
+
         getInit
             .then(flag => {
                 console.log(flag);
-                //enableScroll();
-                setTimeout(function () {
-                    scrollT(1);
-                }, scene._duration);
+                // setTimeout(function () {
+                //     scrollT(1);
+                // }, scene._duration);
             })
 
         //scroll vendor block
