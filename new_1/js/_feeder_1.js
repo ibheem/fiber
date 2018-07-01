@@ -1,6 +1,9 @@
 $(function () {
-    $(document).scrollTop(0);
 
+    $(document).scrollTop(0);
+    // $('body,html').animate({
+    //     scrollTop: 0
+    // }, 100);
     let selector = {
         container_id: 'anim_container',
         max_repeats: 4,
@@ -229,20 +232,23 @@ $(function () {
     };
     _process_input.prototype.animatorDown = (z, i) => {
         for (let k = 0; k < z._input_arr[i].length; k++) {
-            console.log("running for "+i);
-            for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
-                $('#slide' + (j + 1)).addClass('hidden');
-                // switch (z._input_arr[i][k].action[j].act) {
-                //     case 'remove':
-                //     $(z._input_arr[i][k].selector).addClass(''+z._input_arr[i][k].action[j].class);
-                //         break;
-                //     case 'add':
-                //     $(z._input_arr[i][k].selector).removeClass(''+z._input_arr[i][k].action[j].class);
-                //         break;
-                //     case 'toggle':
-                //     $(z._input_arr[i][k].selector).toggleClass(''+z._input_arr[i][k].action[j].class);
-                //         break;
-                // }
+            console.log("running for " + '[' + z._input_arr[i][k].selector + i + ']' + " " + '#slide' + (i + 1));
+            // for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
+
+            //     // switch (z._input_arr[i][k].action[j].act) {
+            //     //     case 'remove':
+            //     //     $(z._input_arr[i][k].selector).addClass(''+z._input_arr[i][k].action[j].class);
+            //     //         break;
+            //     //     case 'add':
+            //     //     $(z._input_arr[i][k].selector).removeClass(''+z._input_arr[i][k].action[j].class);
+            //     //         break;
+            //     //     case 'toggle':
+            //     //     $(z._input_arr[i][k].selector).toggleClass(''+z._input_arr[i][k].action[j].class);
+            //     //         break;
+            //     // }
+            // }
+            for (let l = 0; l < z._max_repeats; l++) {
+                $('#slide' + (l + 1)).addClass('hidden');
             }
             $('#slide' + (i + 1)).removeClass('hidden');
             for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
@@ -279,109 +285,81 @@ $(function () {
                 resolve(scene.playVideo(scene, scene._repeater));
             }, scene._duration);
         });
-        const animateDown_1 = new Promise((resolve, reject) => {
-            $(document).on('mousewheel DOMMouseScroll', (e) => {
-                if (scene._repeater < scene._max_repeats) {
-                    $(window).mousewheel(function (turn, delta) {
-                        $('body,html').animate({
-                            scrollTop: 0
-                        });
-                        if (delta == 1) {
-                            console.log('up');
-                        } else {
-                            console.log('down' + Object.keys(turn));
-                            scene._repeater = 1;
-                            scene.animatorDown(scene, scene._repeater);
-                            setTimeout(() => {
-                                enableScroll();
-                                resolve(scene.playVideo(scene, scene._repeater));
-                            }, scene._duration);
-                        }
-                    });
-                }
-            });
-        });
-        function nextSprint_1() {
-            const animateDown_2 = new Promise((resolve, reject) => {
-               // (function () {
-                    $(document).on('mousewheel DOMMouseScroll', (e) => {
-                        if (scene._repeater < scene._max_repeats) {
-                            $(window).mousewheel(function (turn, delta) {
-                                $('body,html').animate({
-                                    scrollTop: 0
-                                });
-                                if (delta == 1) {
-                                    console.log('up');
-                                } else {
-                                    console.log('down' + " " + turn);
-                                    scene._repeater = 2;
-                                    scene.animatorDown(scene, scene._repeater);
-                                    setTimeout(() => {
-                                        $(document).off('mousewheel DOMMouseScroll')
-                                        resolve(scene.playVideo(scene, scene._repeater));
-                                    }, scene._duration);
-                                }
-                            });
-                        }
-                    });
-                }, scene);
-           // });
-            return (animateDown_2);
-        }
-        function nextSprint_2() {
-            console.log('ok baby');
-            const animateDown_3 = new Promise((resolve, reject) => {
-               // (function () {
-                    $(document).on('mousewheel DOMMouseScroll', (e) => {
-                        if (scene._repeater < scene._max_repeats) {
-                            $(window).mousewheel(function (turn, delta) {
-                                $('body,html').animate({
-                                    scrollTop: 0
-                                });
-                                if (delta == 1) {
-                                    console.log('up');
-                                } else {
-                                    console.log('down' + " " + turn);
-                                    scene._repeater = 3;
-                                    scene.animatorDown(scene, scene._repeater);
-                                    setTimeout(() => {
-                                        $(document).off('mousewheel DOMMouseScroll')
-                                        resolve(scene.playVideo(scene, scene._repeater));
-                                    }, scene._duration);
-                                }
-                            });
-                        }
-                    });
-                }, scene);
-           // });
-            return (animateDown_3);
-        }
 
+
+        let run_ = [0, 1, 2, 3];
         getInit
             .then(flag => {
                 console.log(flag);
-            })
-            .then(flag => {
-                console.log(flag);
-                if (scene._repeater === 0)
-                    return (animateDown_1);
-            })
-            .then(flag => {
-                console.log(flag);
-                return (nextSprint_1());
-            })
-            .then(flag => {
-                console.log(flag);
-                return (nextSprint_2());
-            })
-        // .then(() => {
-        //     return (animateDown_2.reject());
-        // })
-        // .then(() => {
-        //    // setTimeout(() => {
-        //         return (animateDown_3.reject());
-        //     //}, 10000);
+                return (getScroll(1));
+            });
 
-        // })
+
+        function getNextScroll() {
+            $(window).unbind('mousewheel');
+            enableScroll();
+            $('body,html').animate({
+                scrollTop: $('#anim_container').height()
+            }, 100);
+            console.log('chalo be__');
+            window.onscroll = function (e) {
+                if (this.oldScroll > this.scrollY) {
+                    console.log('up');
+                } else {
+                    console.log("down");
+                }
+                this.oldScroll = this.scrollY;
+            }
+        }
+
+
+        function getInScroll(i) {
+            getScroll(i);
+        }
+
+
+        function getScroll(i) {
+            //$(window).one('scroll', function (turn, delta) {
+            $(window).one('mousewheel', function (turn, delta) {
+                console.log(run_[i]);
+                if (delta == 1) {
+                    console.log('up');
+                    if (i == 0) {
+                        getInScroll(i + 1);
+                    }
+                    else {
+                        scene._repeater = i - 1;
+                        scene.animatorDown(scene, scene._repeater);
+                        setTimeout(() => {
+                            scene.playVideo(scene, scene._repeater);
+                            if (i > 0) {
+                                getScroll(i - 1);
+                            }
+
+                        }, scene._duration);
+
+                    }
+                } else {
+                    console.log('down' + " " + turn);
+                    scene._repeater = i;
+                    console.log(i);
+                    scene.animatorDown(scene, scene._repeater);
+                    if (i < scene._max_repeats - 1) {
+                        setTimeout(() => {
+                            scene.playVideo(scene, scene._repeater);
+                            i++;
+                            getScroll(i);
+                        }, scene._duration);
+                    } else {
+                        //code for downward
+                        setTimeout(() => {
+                            getNextScroll();
+                        }, 2000);
+                    }
+
+                }
+            });
+
+        }
     })()
 });
