@@ -21,6 +21,11 @@ $(function () {
             selector: '[data-_video=3]',
             action: 'play/pause',
             length: 2000
+        },
+        {
+            selector: '[data-_video=4]',
+            action: 'play/pause',
+            length: 2000
         }
         ],
         input_arr: [
@@ -212,9 +217,11 @@ $(function () {
         return true;
     };
     _process_input.prototype.playVideo = (z, i) => {
+        console.log("video" + (i + 1));
         let myVideo = document.getElementById("video" + (i + 1));
-        if (myVideo.paused)
+        if (myVideo.paused) {
             myVideo.play();
+        }
         return true;
     };
     _process_input.prototype.initLoad = (z, i) => {
@@ -231,6 +238,8 @@ $(function () {
         }
     };
     _process_input.prototype.animatorDown = (z, i) => {
+        console.log('yhan pe' + i);
+        console.log(z);
         for (let k = 0; k < z._input_arr[i].length; k++) {
             console.log("running for " + '[' + z._input_arr[i][k].selector + i + ']' + " " + '#slide' + (i + 1));
             // for (let j = 0; j < z._input_arr[i][k].action.length; j++) {
@@ -287,24 +296,33 @@ $(function () {
         });
 
 
-        let run_ = [0, 1, 2, 3];
         getInit
             .then(flag => {
                 console.log(flag);
-                return (getScroll(1));
+                scene._repeater = 1;
+                return (getScroll(scene._repeater));
             });
 
 
         function getNextScroll() {
             $(window).unbind('mousewheel');
             enableScroll();
-            $('body,html').animate({
-                scrollTop: $('#anim_container').height()
-            }, 100);
+            // $('body,html').animate({
+            //     scrollTop: $('.showcase').height()
+            // }, 1000);
             console.log('chalo be__');
             window.onscroll = function (e) {
                 if (this.oldScroll > this.scrollY) {
                     console.log('up');
+                    if (this.scrollY < $('.showcase').height()) {
+                        $('body,html').animate({
+                            scrollTop: 0
+                        }, 500);
+                        disableScroll();
+                        setTimeout(() => {
+                            getScroll(2);
+                        }, 700);
+                    }
                 } else {
                     console.log("down");
                 }
@@ -321,37 +339,36 @@ $(function () {
         function getScroll(i) {
             //$(window).one('scroll', function (turn, delta) {
             $(window).one('mousewheel', function (turn, delta) {
-                console.log(run_[i]);
                 if (delta == 1) {
-                    console.log('up');
-                    if (i == 0) {
-                        getInScroll(i + 1);
+                    console.log('up' + i);
+                    i = scene._repeater - 1;
+                    console.log('up' + scene._repeater);
+                    if (i == 0 || i < 0) {
+                        scene._repeater = 1;
+                        getInScroll(scene._repeater);
                     }
                     else {
-                        scene._repeater = i - 1;
-                        scene.animatorDown(scene, scene._repeater);
-                        setTimeout(() => {
-                            scene.playVideo(scene, scene._repeater);
-                            if (i > 0) {
-                                getScroll(i - 1);
-                            }
-
-                        }, scene._duration);
-
+                        if (i > 0 && i < scene._max_repeats) {
+                            console.log('mere bhai' + scene._repeater);
+                            scene._repeater = i - 1;
+                            scene.animatorDown(scene, scene._repeater);
+                            setTimeout(() => {
+                                scene.playVideo(scene, scene._repeater);
+                                getScroll(scene._repeater);
+                            }, scene._duration);
+                        }
                     }
                 } else {
                     console.log('down' + " " + turn);
                     scene._repeater = i;
-                    console.log(i);
-                    scene.animatorDown(scene, scene._repeater);
-                    if (i < scene._max_repeats - 1) {
+                    if (i < scene._max_repeats) {
+                        scene.animatorDown(scene, scene._repeater);
                         setTimeout(() => {
                             scene.playVideo(scene, scene._repeater);
-                            i++;
-                            getScroll(i);
+                            scene._repeater++;
+                            getScroll(scene._repeater);
                         }, scene._duration);
                     } else {
-                        //code for downward
                         setTimeout(() => {
                             getNextScroll();
                         }, 2000);
@@ -362,4 +379,27 @@ $(function () {
 
         }
     })()
+
+    //  console.clear();
+
+
+
+
+
+    //swipe
+    var swipable = document.getElementById('swipable');
+
+    var mc = new Hammer(swipable);
+
+    //enable all directions
+    mc.get('swipe').set({
+        direction: Hammer.DIRECTION_ALL,
+        threshold: 1,
+        velocity: 0.1
+    });
+
+    // listen to events...
+    mc.on("swipeleft swiperight", function (ev) {
+        console.log(ev.type + " gesture detected.");
+    });
 });
